@@ -1,0 +1,17 @@
+meta {
+  name: Lock account
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{HOST}}/v1/accounts/0a6e52eb-58c5-4181-80de-8d8c33cfe850/lock
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "balance": 100
+  }
+}

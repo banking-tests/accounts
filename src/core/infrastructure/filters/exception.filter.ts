@@ -19,7 +19,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       timestamp,
       path,
       data,
-      cause: exception?.cause ?? 'Unknown',
+      cause: exception?.cause,
     };
 
     Logger.error(JSON.stringify(exceptionResponse), 'ExceptionFilter');
@@ -56,11 +56,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message = exceptionResponse.message;
     }
 
-    return response.status(status).json({
+    const responseBody = {
       ...baseData,
       statusCode: status,
       error,
       message,
-    });
+    };
+
+    return response.status(status).json(responseBody);
   }
 }

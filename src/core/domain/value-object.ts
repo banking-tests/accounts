@@ -1,7 +1,12 @@
+import { InvalidValueException } from '@/core/domain/exceptions/invalid-value.exception';
+
 export abstract class ValueObject<T> {
-  protected _value: T;
+  private _value: T;
 
   constructor(value: T) {
+    if (this.isValid && !this.isValid(value)) {
+      throw new InvalidValueException(`Invalid value: ${value}`);
+    }
     this._value = value;
   }
 
@@ -9,9 +14,11 @@ export abstract class ValueObject<T> {
     return this._value;
   }
 
-  public equals(valueObject: ValueObject<T>): boolean {
+  public isEqual(valueObject: ValueObject<T>): boolean {
     return this._value === valueObject.getValue();
   }
 
-  public abstract validate(): void;
+  public isValid(value: T): boolean {
+    return Boolean(value);
+  }
 }

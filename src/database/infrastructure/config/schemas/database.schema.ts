@@ -1,4 +1,4 @@
-import * as Joi from "joi";
+import * as Joi from 'joi';
 
 export const databaseSchema = Joi.object({
   DB_HOST: Joi.string().required().hostname(),
