@@ -25,7 +25,10 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
   }
 
   public async create(contract: I): Promise<E> {
-    const document = await this.store.insert(contract);
+    const document = await this.store.insert({
+      ...contract,
+      isDeleted: this.options?.softDelete,
+    });
     if (document) {
       return this.mapToEntity(document);
     }
@@ -161,10 +164,15 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
   }
 
   public async update(filter: Partial<I>, payload: Partial<I>): Promise<E> {
-    const document = await this.store.update(filter, payload, {
-      returnUpdatedDocs: true,
-      multi: false,
-    });
+    const data = await this.findOne(filter);
+    const document = await this.store.update(
+      filter,
+      { ...data._toObject(), ...payload },
+      {
+        returnUpdatedDocs: true,
+        multi: false,
+      },
+    );
     return this.mapToEntity(document as I);
   }
 
@@ -258,7 +266,7 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
       .then((documents) => documents.map((document) => this.mapToEntity(document)));
 
     const pages = Math.ceil(total / options.limit);
-    const page = Math.ceil(options.offset / options.limit) + 1;
+    const page = options.page;
     const limit = options.limit;
 
     return {

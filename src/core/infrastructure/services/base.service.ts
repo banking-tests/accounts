@@ -1,22 +1,20 @@
-import { Crud } from "@/core/domain/crud.interface";
-import { Entity } from "@/core/domain/entity";
-import { BaseProps } from "@/core/domain/interfaces/base-props.interface";
-import { Filter } from "@/core/domain/interfaces/filter.interface";
-import { Pagination } from "@/core/domain/pagination";
-import { Json } from "@/core/types/general/json.type";
-import { QueryParsedOptions } from "@/core/types/general/query-parsed-options.type";
-import { Injectable } from "@nestjs/common";
+import { Crud } from '@/core/domain/crud.interface';
+import { Entity } from '@/core/domain/entity';
+import { BaseProps } from '@/core/domain/interfaces/base-props.interface';
+import { Filter } from '@/core/domain/interfaces/filter.interface';
+import { Pagination } from '@/core/domain/pagination';
+import { Json } from '@/core/types/general/json.type';
+import { QueryParsedOptions } from '@/core/types/general/query-parsed-options.type';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class BaseService<I extends BaseProps, E extends Entity<I>>
-  implements Crud<I, E>
-{
+export class BaseService<I extends BaseProps, E extends Entity<I>> implements Crud<I, E> {
   constructor(private readonly repository: Crud<I, E>) {}
 
   public findOne(
     filter: Filter<I>,
     projection?: Json,
-    options?: QueryParsedOptions
+    options?: QueryParsedOptions,
   ): Promise<E> {
     return this.repository.findOne(filter, projection, options);
   }
@@ -24,7 +22,7 @@ export class BaseService<I extends BaseProps, E extends Entity<I>>
   public find(
     filter?: Filter<I>,
     projection?: Json,
-    options?: QueryParsedOptions
+    options?: QueryParsedOptions,
   ): Promise<E[]> {
     return this.repository.find(filter, projection, options);
   }
@@ -57,10 +55,7 @@ export class BaseService<I extends BaseProps, E extends Entity<I>>
     return this.repository.deleteMany(filter);
   }
 
-  public async count(
-    filter?: Filter<I>,
-    options?: QueryParsedOptions
-  ): Promise<number> {
+  public async count(filter?: Filter<I>, options?: QueryParsedOptions): Promise<number> {
     return this.repository.count(filter, options);
   }
 
@@ -88,10 +83,7 @@ export class BaseService<I extends BaseProps, E extends Entity<I>>
     return this.repository.existsByUuids(uuids);
   }
 
-  public async paginate(
-    filter: Filter<I>,
-    options: any
-  ): Promise<Pagination<E>> {
+  public async paginate(filter: Filter<I>, options: any): Promise<Pagination<E>> {
     return this.repository.paginate(filter, options);
   }
 }

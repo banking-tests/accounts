@@ -1,4 +1,4 @@
-import * as Joi from "joi";
+import * as Joi from 'joi';
 
 export const antiThrottleSchema = Joi.object({
   ANTI_THROTTLE_MAX_REQUEST: Joi.number(),

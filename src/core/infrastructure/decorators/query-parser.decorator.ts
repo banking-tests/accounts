@@ -1,38 +1,37 @@
-import { Json } from "@/core/types/general/json.type";
-import { QueryParser as Parser } from "@/core/types/general/query-parser.type";
-import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { MongooseQueryParser, QueryOptions } from "mongoose-query-parser";
+import { Json } from '@/core/types/general/json.type';
+import { QueryParser as Parser } from '@/core/types/general/query-parser.type';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-export const QueryParser = createParamDecorator(
-  (param: string, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
-    const parser = new MongooseQueryParser();
+import { MongooseQueryParser, QueryOptions } from 'mongoose-query-parser';
 
-    const parsedQuery: Json = parser.parse(request.query);
+export const QueryParser = createParamDecorator((param: string, ctx: ExecutionContext) => {
+  const request = ctx.switchToHttp().getRequest();
+  const parser = new MongooseQueryParser();
 
-    parsedQuery.options = {};
-    parsedQuery.search = request.query.search;
+  const parsedQuery: Json = parser.parse(request.query);
 
-    const page = parsedQuery?.filter?.page && Number(parsedQuery.filter.page);
-    parsedQuery.options.limit = parsedQuery.limit && Number(parsedQuery.limit);
-    parsedQuery.options.sort = parsedQuery.sort;
-    parsedQuery.options.page = page;
+  parsedQuery.options = {};
+  parsedQuery.search = request.query.search;
 
-    delete parsedQuery.filter.page;
-    delete parsedQuery.limit;
-    delete parsedQuery.filter.limit;
-    delete parsedQuery.filter.search;
-    delete parsedQuery.options.filter;
-    delete parsedQuery.options.offset;
+  const page = (parsedQuery?.filter?.page && Number(parsedQuery.filter.page)) ?? 1;
+  parsedQuery.options.limit = (parsedQuery.limit && Number(parsedQuery.limit)) ?? 10;
+  parsedQuery.options.sort = parsedQuery.sort;
+  parsedQuery.options.page = page;
 
-    const payload = <Parser>{
-      filter: parsedQuery.filter,
-      options: parsedQuery.options,
-      search: parsedQuery.search,
-    };
+  delete parsedQuery.filter.page;
+  delete parsedQuery.limit;
+  delete parsedQuery.filter.limit;
+  delete parsedQuery.filter.search;
+  delete parsedQuery.options.filter;
+  delete parsedQuery.options.offset;
 
-    const result = param ? payload && payload[param] : payload;
+  const payload = <Parser>{
+    filter: parsedQuery.filter,
+    options: parsedQuery.options,
+    search: parsedQuery.search,
+  };
 
-    return <QueryOptions>result;
-  }
-);
+  const result = param ? payload && payload[param] : payload;
+
+  return <QueryOptions>result;
+});

@@ -1,0 +1,17 @@
+meta {
+  name: Update account balance
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{HOST}}/v1/accounts/569086ba-2b8d-4e9e-8cc9-0e55002faec4/balance
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "balance": -100
+  }
+}
