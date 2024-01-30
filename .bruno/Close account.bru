@@ -1,0 +1,17 @@
+meta {
+  name: Close account
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{HOST}}/v1/accounts/0a6e52eb-58c5-4181-80de-8d8c33cfe850/close
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "balance": 100
+  }
+}

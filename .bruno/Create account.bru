@@ -1,0 +1,15 @@
+meta {
+  name: Create account
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{HOST}}/v1/accounts
+  body: json
+  auth: none
+}
+
+body:json {
+  {}
+}
