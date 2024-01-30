@@ -1,6 +1,7 @@
 import { Json } from '@/core/types/general/json.type';
 import { QueryParser as Parser } from '@/core/types/general/query-parser.type';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+
 import { MongooseQueryParser, QueryOptions } from 'mongoose-query-parser';
 
 export const QueryParser = createParamDecorator((param: string, ctx: ExecutionContext) => {
@@ -12,8 +13,8 @@ export const QueryParser = createParamDecorator((param: string, ctx: ExecutionCo
   parsedQuery.options = {};
   parsedQuery.search = request.query.search;
 
-  const page = parsedQuery?.filter?.page && Number(parsedQuery.filter.page);
-  parsedQuery.options.limit = parsedQuery.limit && Number(parsedQuery.limit);
+  const page = (parsedQuery?.filter?.page && Number(parsedQuery.filter.page)) ?? 1;
+  parsedQuery.options.limit = (parsedQuery.limit && Number(parsedQuery.limit)) ?? 10;
   parsedQuery.options.sort = parsedQuery.sort;
   parsedQuery.options.page = page;
 

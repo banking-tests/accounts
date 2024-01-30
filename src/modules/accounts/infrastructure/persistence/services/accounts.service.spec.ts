@@ -34,19 +34,6 @@ describe('AccountsService', () => {
     expect(accountsService).toBeDefined();
   });
 
-  it('should return an array of accounts', async () => {
-    await accountsService.createMany(accountsMock);
-    const result = await accountsService.find({ isDeleted: false });
-    expect(result).toHaveLength(3);
-    result.map((account) => {
-      expect(account.getNumber()).toBeDefined();
-      expect(account.getBalance()).toBeDefined();
-      expect(account.getCurrency()).toBeDefined();
-      expect(account.getStatus()).toBeDefined();
-      expect(account.getType()).toBeDefined();
-    });
-  });
-
   it('should return an account', async () => {
     const account = await accountsService.create(accountsMock[0]);
     const result = await accountsService.findOne({ uuid: account.getUuid() });

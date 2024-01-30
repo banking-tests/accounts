@@ -266,7 +266,7 @@ export class BaseMemoryRepository<I, E extends Entity<I>> implements Crud<I, E> 
       .then((documents) => documents.map((document) => this.mapToEntity(document)));
 
     const pages = Math.ceil(total / options.limit);
-    const page = Math.ceil(options.offset / options.limit) + 1;
+    const page = options.page;
     const limit = options.limit;
 
     return {

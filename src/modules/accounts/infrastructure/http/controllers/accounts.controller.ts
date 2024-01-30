@@ -1,9 +1,15 @@
 import { Context } from '@/core/domain/interfaces/context.interface';
+import { Pagination } from '@/core/domain/pagination';
+import { ApiKeyHeader } from '@/core/infrastructure/decorators/api-key-header.decortor';
 import { Ctx } from '@/core/infrastructure/decorators/context.decorator';
+import { QueryParser } from '@/core/infrastructure/decorators/query-parser.decorator';
+import { Json } from '@/core/types/general/json.type';
+import { QueryParsedOptions } from '@/core/types/general/query-parsed-options.type';
 import { ActivateAccountUseCase } from '@/modules/accounts/application/use-cases/activate-account.use-case';
 import { CloseAccountUseCase } from '@/modules/accounts/application/use-cases/close-account.use-case';
 import { CreateAccountUseCase } from '@/modules/accounts/application/use-cases/create-account.use-case';
 import { GetAccountUseCase } from '@/modules/accounts/application/use-cases/get-account.use-case';
+import { ListAccountsUseCase } from '@/modules/accounts/application/use-cases/list-accounts.use-case';
 import { LockAccountUseCase } from '@/modules/accounts/application/use-cases/lock-account.use-case';
 import { UpdateBalanceUseCase } from '@/modules/accounts/application/use-cases/update-balance.use-case';
 import { AccountStatus } from '@/modules/accounts/domain/enums/status.enum';
@@ -19,13 +25,16 @@ import {
   ConflictException,
   Controller,
   Get,
+  HttpCode,
   InternalServerErrorException,
   NotFoundException,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Accounts')
 @Controller({ version: '1', path: 'accounts' })
 export class AccountsController {
   constructor(
@@ -35,9 +44,36 @@ export class AccountsController {
     private readonly lockAccountUseCase: LockAccountUseCase,
     private readonly closeAccountUseCase: CloseAccountUseCase,
     private readonly activateAccountUseCase: ActivateAccountUseCase,
+    private readonly listAccountsUseCase: ListAccountsUseCase,
   ) {}
 
+  @Get('/')
+  @ApiKeyHeader('List accounts')
+  @ApiQuery({ name: 'search', type: 'string', example: 'pikachu', required: false })
+  @ApiQuery({ name: 'limit', type: 'number', example: 10, required: false })
+  @ApiQuery({ name: 'page', type: 'number', example: 1, required: false })
+  @ApiQuery({ name: 'sort', type: 'string', example: 'name', required: false })
+  @ApiQuery({
+    name: 'types.type.name',
+    type: 'string',
+    example: 'fire,ground',
+    required: false,
+  })
+  public async listAccounts(
+    @Ctx() context: Context,
+    @QueryParser('search') search: string,
+    @QueryParser('filter') filter: Json,
+    @QueryParser('options') options: QueryParsedOptions,
+  ): Promise<Pagination<Account>> {
+    try {
+      return await this.listAccountsUseCase.execute(context, search, filter, options);
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
   @Get('/:uuid')
+  @ApiKeyHeader('Get account')
   public async getAccount(@Ctx() ctx: Context, @Param('uuid') uuid: string): Promise<Account> {
     try {
       return await this.getAccountUseCase.execute(ctx, uuid);
@@ -47,6 +83,7 @@ export class AccountsController {
   }
 
   @Post('/')
+  @ApiKeyHeader('Create account')
   public async createAccount(
     @Ctx() ctx: Context,
     @Body() body: CreateAccountDto,
@@ -63,6 +100,8 @@ export class AccountsController {
   }
 
   @Patch('/:uuid/balance')
+  @HttpCode(200)
+  @ApiKeyHeader('Get account balance')
   public async updateBalance(
     @Ctx() ctx: Context,
     @Param('uuid') uuid: string,
@@ -86,6 +125,7 @@ export class AccountsController {
   }
 
   @Patch('/:uuid/lock')
+  @ApiKeyHeader('Lock account')
   public async lockAccount(
     @Ctx() ctx: Context,
     @Param('uuid') uuid: string,
@@ -108,6 +148,7 @@ export class AccountsController {
   }
 
   @Patch('/:uuid/close')
+  @ApiKeyHeader('Close account')
   public async closeAccount(
     @Ctx() ctx: Context,
     @Param('uuid') uuid: string,
@@ -133,6 +174,7 @@ export class AccountsController {
   }
 
   @Patch('/:uuid/activate')
+  @ApiKeyHeader('Activate account')
   public async activateAccount(
     @Ctx() ctx: Context,
     @Param('uuid') uuid: string,
