@@ -1,4 +1,4 @@
-name: Test
+name: E2E tests
 
 on:
   pull_request:
@@ -24,9 +24,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install libraries
         run: yarn install
-      - name: Run test
-        run: yarn test
       - name: Run test e2e
         run: yarn test:e2e
-      - name: Run test coverage
-        run: yarn test:cov
