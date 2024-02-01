@@ -1,7 +1,7 @@
 import { Json } from '@/core/types/general/json.type';
 import { QueryParser as Parser } from '@/core/types/general/query-parser.type';
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { MongooseQueryParser, QueryOptions } from 'mongoose-query-parser';
+import { MongooseQueryParser, QueryOptions } from 'mongoose-query-parser-fork';
 
 export const QueryParser = createParamDecorator((param: string, ctx: ExecutionContext) => {
   const request = ctx.switchToHttp().getRequest();

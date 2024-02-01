@@ -5200,10 +5200,10 @@ mongoose-paginate@^5.0.3:
   dependencies:
     bluebird "3.0.5"
 
-mongoose-query-parser@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/mongoose-query-parser/-/mongoose-query-parser-1.3.1.tgz#5ea3ef8971584bd942b62f96e5d16fe39c9e06e9"
-  integrity sha512-ulQrEi+DAYGyq8AhoAzA0DZkO+5drGoMp1ZdCf4l5XfQoCYxDkrTj0DaUZisSrfWkLdDmrsI3vDdJUAZTGdyDQ==
+mongoose-query-parser-fork@^1.3.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/mongoose-query-parser-fork/-/mongoose-query-parser-fork-1.3.4.tgz#6917f00ed5b9ba2805d38cd8eb41a815f0f7dd2e"
+  integrity sha512-C60iVcTHL4EmhrNkijCXdNZURLizg0G7KJ+sM3KOaRpy421qIUq9XJqwPyDYDpXFTx3+sQfJAdBiE7uoHSFM0Q==
   dependencies:
     lodash "^4.17.21"
     luxon "^1.27.0"
