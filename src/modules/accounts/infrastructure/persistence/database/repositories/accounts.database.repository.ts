@@ -12,6 +12,6 @@ export class AccountsDatabaseRepository extends BaseRepository<Account, AccountE
     @InjectModel(AccountModel.name)
     private readonly accountModel: PaginateModel<AccountModel>,
   ) {
-    super(accountModel, AccountEntity, { softDelete: true });
+    super(accountModel, AccountEntity);
   }
 }
